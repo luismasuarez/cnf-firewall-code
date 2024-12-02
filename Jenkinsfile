@@ -1,30 +1,16 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:22.11.0-alpine3.20'
-            args '-u 1000:1000 -v /var/run/docker.sock:/var/run/docker.sock'
-        }
-    }
+    agent { docker { image 'node:22.11.0-alpine3.20' } }
     stages {
-        stage('Construir imagen Docker') {
+        stage('Comprobar version los archhivos clonados') {
             steps {
-                echo 'Construyendo la imagen Docker...'
-                sh 'docker build -t luismasuarezzz/cnf-firewall:1.0 .'
+                sh 'ls'
             }
         }
-        stage('Eliminar imagen Docker') {
+
+        stage('Comprobar version de NodeJS') {
             steps {
-                echo 'Eliminando la imagen Docker...'
-                sh 'docker rmi luismasuarezzz/cnf-firewall:1.0 || true'
+                sh 'node --version'
             }
-        }
-    }
-    post {
-        success {
-            echo 'El pipeline se ejecutó correctamente.'
-        }
-        failure {
-            echo 'El pipeline falló. Revisa los errores.'
         }
     }
 }
