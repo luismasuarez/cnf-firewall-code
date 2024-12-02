@@ -1,5 +1,5 @@
 pipeline {
-    agent { docker { image 'node:22.11.0-alpine3.20' } }
+    agent { docker { image 'docker:24.0.5-dind' } }
     stages {
         stage('Comprobar version los archhivos clonados') {
             steps {
@@ -9,7 +9,7 @@ pipeline {
 
         stage('Comprobar version de NodeJS') {
             steps {
-                sh 'node --version'
+                sh 'docker version'
             }
         }
     }
