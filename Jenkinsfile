@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent { docker { image 'node:22.11.0-alpine3.20' } }
 
     environment {
         DOCKER_IMAGE = 'luismasuarezzz/cnf-firewall:1.0' // Ajusta según tu preferencia
