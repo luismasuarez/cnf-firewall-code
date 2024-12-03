@@ -4,7 +4,8 @@
   "description": "Aplicación Express con un cortafuegos simulado",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+     "test": "jest"
   },
   "dependencies": {
     "express": "^4.21.1"

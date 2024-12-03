@@ -52,3 +52,6 @@ app.get("/metrics", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Servidor escuchando en el puerto ${PORT}`);
 });
+
+// Exporta la app para realizar pruebas con supertest
+module.exports = app;
