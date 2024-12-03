@@ -1,46 +1,29 @@
 pipeline {
-    agent {
-        docker {
-            image 'docker:24.0.5-dind'
-            args '-v /var/run/docker.sock:/var/run/docker.sock --user root'
-        }
-    }
+    agent { docker { image 'node:22.11.0-alpine3.20' } }
+
     stages {
-        stage('Construir imagen de CNF') {
+        stage('Verificar versión de Node.js') {
             steps {
-                sh 'docker build -t cnf-firewall:1.0 .'
+                sh 'node --version'  // Verifica la versión de Node.js
             }
         }
 
-        stage('Comprobar archivos clonados') {
+        stage('Instalar dependencias') {
             steps {
-                sh 'ls'
+                sh 'npm install'  // Instalar dependencias del proyecto
             }
         }
 
-        stage('Comprobar versión de Docker') {
+        stage('Ejecutar pruebas') {
             steps {
-                sh 'docker version'
-            }
-        }
-
-        stage('Instalar dependencias y ejecutar pruebas') {
-            steps {
-                script {
-                    // Ejecutar en contenedor Docker con Node.js
-                    sh '''
-                        docker run --rm -v $(pwd):/app -w /app node:16 npm install
-                        docker run --rm -v $(pwd):/app -w /app node:16 npm test
-                    '''
-                }
+                sh 'npm test'  // Ejecutar las pruebas definidas en el proyecto
             }
         }
     }
 
     post {
         always {
-            // Pasos de limpieza, si es necesario
-            echo 'Pipeline finalizada.'
+            echo 'Pipeline finalizado.'
         }
         success {
             echo 'Las pruebas fueron exitosas.'
