@@ -1,9 +1,5 @@
 pipeline {
-    agent {
-        docker {
-            image 'node:22.11.0-alpine3.20'
-        }
-    }
+    agent none  // No usar un agente global
 
     options {
         skipStagesAfterUnstable()
@@ -14,19 +10,20 @@ pipeline {
         CI = 'true'
     }
     stages {
-        stage('Ver imágenes de Docker') {
+        stage('Ver images de docker') {
             agent any
+
             steps {
-                script {
-                    // Debugging para verificar el entorno
-                    sh 'ls -l /var/run/docker.sock'
-                    sh 'docker info'
-                    sh 'docker images'
-                }
+                sh 'docker images'  // Ver imágenes en el contenedor
             }
         }
 
         stage('Instalar dependencias') {
+            agent {
+                docker {
+                    image 'node:22.11.0-alpine3.20'
+                }
+            }
             steps {
                 echo 'Instalando dependencias del proyecto'
                 sh '''
@@ -40,6 +37,11 @@ pipeline {
         }
 
         stage('Ejecutar pruebas') {
+            agent {
+                docker {
+                    image 'node:22.11.0-alpine3.20'
+                }
+            }
             steps {
                 echo 'Ejecutando pruebas'
                 sh 'npm test -- --ci'  // Forzar modo CI en Jest para evitar problemas
