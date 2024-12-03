@@ -9,25 +9,25 @@ pipeline {
         NODE_ENV = 'prod'
         CI = 'true'
     }
-
     stages {
-        stage('Docker Verifications') {
+        stage('Ver images de docker') {
             agent any
 
             steps {
-                sh 'docker info'
-                sh 'docker version'
-                sh 'docker images'
+                sh '''
+                docker info
+                docker version
+                docker images
+                '''
             }
         }
 
-        stage('Node.js Tasks') {
+        stage('Instalar dependencias') {
             agent {
                 docker {
                     image 'node:22.11.0-alpine3.20'
                 }
             }
-
             steps {
                 echo 'Instalando dependencias del proyecto'
                 sh '''
