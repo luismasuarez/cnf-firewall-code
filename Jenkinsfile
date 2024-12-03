@@ -16,7 +16,7 @@ pipeline {
     stages {
         stage('Ver images de docker') {
             steps {
-                sh 'docker images'  // Ver imágenes en el contenedor
+                sh 'docker images'
             }
         }
 
