@@ -54,10 +54,6 @@ pipeline {
     }
 
     post {
-        always {
-            echo 'Pipeline finalizado.'
-            archiveArtifacts artifacts: '**/logs/**/*.log', allowEmptyArchive: true  // Guarda logs
-        }
         success {
             echo 'Las pruebas fueron exitosas.'
         }
