@@ -13,6 +13,11 @@ pipeline {
         CI = 'true' // Indica que el entorno es de integración continua
     }
     stages {
+        stage('Ver images de docker') {
+            steps {
+                sh 'docker images'
+            }
+        }
         stage('Instalar dependencias') {
             steps {
                 echo 'Instalando dependencias del proyecto'
