@@ -14,11 +14,7 @@ pipeline {
             agent any
 
             steps {
-                sh '''
-                docker info
-                docker version
-                docker images
-                '''
+                sh 'docker images'  // Ver imágenes en el contenedor
             }
         }
 
@@ -38,7 +34,14 @@ pipeline {
                 fi
                 '''
             }
+        }
 
+        stage('Ejecutar pruebas') {
+            agent {
+                docker {
+                    image 'node:22.11.0-alpine3.20'
+                }
+            }
             steps {
                 echo 'Ejecutando pruebas'
                 sh 'npm test -- --ci'  // Forzar modo CI en Jest para evitar problemas
