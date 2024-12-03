@@ -48,10 +48,12 @@ app.get("/metrics", (req, res) => {
   });
 });
 
-// Inicio del servidor
-app.listen(PORT, () => {
-  console.log(`Servidor escuchando en el puerto ${PORT}`);
-});
+// Inicia el servidor solo si no está en pruebas
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Servidor escuchando en el puerto ${PORT}`);
+  });
+}
 
 // Exporta la app para realizar pruebas con supertest
 module.exports = app;
