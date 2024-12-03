@@ -14,7 +14,11 @@ pipeline {
             agent any
 
             steps {
-                sh 'docker images'  // Ver imágenes en el contenedor
+                sh '''
+                docker info
+                docker version
+                docker images
+                '''
             }
         }
 
