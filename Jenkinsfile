@@ -13,20 +13,6 @@ pipeline {
         CI = 'true' // Indica que el entorno es de integración continua
     }
     stages {
-        stage('Preparar entorno') {
-            steps {
-                echo 'Preparando el entorno de trabajo'
-                sh 'mkdir -p /workspace && cd /workspace' // Crear un contexto aislado
-            }
-        }
-
-        stage('Verificar versión de Node.js') {
-            steps {
-                echo 'Verificando la versión de Node.js'
-                sh 'node --version'
-            }
-        }
-
         stage('Instalar dependencias') {
             steps {
                 echo 'Instalando dependencias del proyecto'
@@ -71,10 +57,6 @@ pipeline {
             script {
                 currentBuild.result = "FAILURE"
             }
-        }
-        cleanup {
-            echo 'Limpiando entorno de trabajo'
-            sh 'rm -rf /workspace'
         }
     }
 }
