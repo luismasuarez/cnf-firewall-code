@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cnf-firewall-deployment
+  labels:
+    app: cnf-firewall
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cnf-firewall
+  template:
+    metadata:
+      labels:
+        app: cnf-firewall
+    spec:
+      containers:
+      - name: cnf-firewall
+        image: cnf-firewall:1.0
+        ports:
+        - containerPort: 5000
+        resources:
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+          requests:
+            memory: "256Mi"
+            cpu: "250m"

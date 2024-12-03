@@ -123,6 +123,11 @@ Actualiza el contexto e inicialo para kubectl:
 ```bash
 minikube update-context
 ```
+#### **Paso 3.3: Error de servicio**
+Error de servicio
+```bash
+ minikube image load cnf-firewall:1.0
+ ```
 
 ---
 
@@ -134,24 +139,33 @@ Crea un archivo `deployment.yaml` para describir cómo Kubernetes ejecutará tu 
 1. Ejemplo de despliegue:
    ```yaml
    apiVersion: apps/v1
-   kind: Deployment
-   metadata:
-     name: cnf-firewall-deployment
-   spec:
-     replicas: 1
-     selector:
-       matchLabels:
-         app: cnf-firewall
-     template:
-       metadata:
-         labels:
-           app: cnf-firewall
-       spec:
-         containers:
-         - name: cnf-firewall
-           image: <usuario_docker>/cnf-firewall:1.1
-           ports:
-           - containerPort: 5000
+    kind: Deployment
+    metadata:
+      name: cnf-firewall-deployment
+      labels:
+        app: cnf-firewall
+    spec:
+      replicas: 1
+      selector:
+        matchLabels:
+          app: cnf-firewall
+      template:
+        metadata:
+          labels:
+            app: cnf-firewall
+        spec:
+          containers:
+          - name: cnf-firewall
+            image: cnf-firewall:1.0
+            ports:
+            - containerPort: 5000
+            resources:
+              limits:
+                memory: "512Mi"
+                cpu: "500m"
+              requests:
+                memory: "256Mi"
+                cpu: "250m"
    ```
 
 2. Aplicar el despliegue:
@@ -165,18 +179,19 @@ Crea un archivo `service.yaml` para exponer tu aplicación a través de un servi
 1. Ejemplo de servicio:
    ```yaml
    apiVersion: v1
-   kind: Service
-   metadata:
-     name: cnf-firewall-service
-   spec:
-     selector:
-       app: cnf-firewall
-     ports:
-     - protocol: TCP
-       port: 80
-       targetPort: 5000
-       nodePort: 30001
-     type: NodePort
+    kind: Service
+    metadata:
+      name: cnf-firewall-service
+      labels:
+        app: cnf-firewall
+    spec:
+      type: NodePort
+      ports:
+      - port: 5000
+        targetPort: 5000
+        nodePort: 30001
+      selector:
+        app: cnf-firewall
    ```
 
 2. Aplicar el servicio:

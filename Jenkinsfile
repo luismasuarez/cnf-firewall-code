@@ -9,6 +9,7 @@ pipeline {
         NODE_ENV = 'prod'
         CI = 'true'
     }
+
     stages {
         stage('Instalar dependencias') {
             agent {
@@ -45,7 +46,7 @@ pipeline {
 
             steps {
                 echo 'Construir Imagen'
-                sh 'docker build -t cnf-firewall:1.0 .'
+                sh 'docker build -t cnf-firewall:lts .'
             }
         }
     }
