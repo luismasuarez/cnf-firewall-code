@@ -9,7 +9,7 @@ pipeline {
         timestamps() // Agrega timestamps para un mejor debugging
     }
     environment {
-        NODE_ENV = 'test' // Configuración global para evitar modificaciones locales
+        NODE_ENV = 'prod' // Configuración global para evitar modificaciones locales
         CI = 'true' // Indica que el entorno es de integración continua
     }
     stages {
