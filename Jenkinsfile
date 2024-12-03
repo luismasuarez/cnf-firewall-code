@@ -2,7 +2,6 @@ pipeline {
     agent {
         docker {
             image 'node:22.11.0-alpine3.20'
-            args '-v /var/run/docker.sock:/var/run/docker.sock -w'
         }
     }
 
@@ -16,8 +15,14 @@ pipeline {
     }
     stages {
         stage('Ver images de docker') {
+            agent {
+                docker {
+                    image 'docker:24.0.5-dind' // Usar Docker-in-Docker solo en esta etapa
+                    args '-v /var/run/docker.sock:/var/run/docker.sock --user root' // Montar el Docker socket
+                }
+            }
             steps {
-                sh 'docker images'
+                sh 'docker images' // Ver las imágenes Docker
             }
         }
         stage('Instalar dependencias') {
