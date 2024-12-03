@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'docker:24.0.5-dind'
-            args '-t -d -u 1000:1000 -v /var/run/docker.sock:/var/run/docker.sock -w '
+            args '-v /var/run/docker.sock:/var/run/docker.sock --user root'
         }
     }
     stages {
@@ -16,6 +16,19 @@ pipeline {
             steps {
                 sh 'docker version'
             }
+        }
+    }
+
+    post {
+        always {
+            // Pasos de limpieza, si es necesario
+            echo 'Pipeline finalizada.'
+        }
+        success {
+            echo 'Las pruebas fueron exitosas.'
+        }
+        failure {
+            echo 'Las pruebas fallaron.'
         }
     }
 }
