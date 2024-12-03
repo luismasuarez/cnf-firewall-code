@@ -51,16 +51,6 @@ pipeline {
                 sh 'npm test -- --ci'  // Forzar modo CI en Jest para evitar problemas
             }
         }
-
-        stage('Analizar resultados (opcional)') {
-            when {
-                expression { return fileExists('coverage') }  // Verifica si existe cobertura
-            }
-            steps {
-                echo 'Generando reporte de cobertura'
-                sh 'npm run coverage'  // Ejecuta un script opcional para análisis
-            }
-        }
     }
 
     post {
