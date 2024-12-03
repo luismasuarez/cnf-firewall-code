@@ -9,21 +9,25 @@ pipeline {
         NODE_ENV = 'prod'
         CI = 'true'
     }
+
     stages {
-        stage('Ver images de docker') {
+        stage('Docker Verifications') {
             agent any
 
             steps {
-                sh 'docker images'  // Ver imágenes en el contenedor
+                sh 'docker info'
+                sh 'docker version'
+                sh 'docker images'
             }
         }
 
-        stage('Instalar dependencias') {
+        stage('Node.js Tasks') {
             agent {
                 docker {
                     image 'node:22.11.0-alpine3.20'
                 }
             }
+
             steps {
                 echo 'Instalando dependencias del proyecto'
                 sh '''
@@ -34,14 +38,7 @@ pipeline {
                 fi
                 '''
             }
-        }
 
-        stage('Ejecutar pruebas') {
-            agent {
-                docker {
-                    image 'node:22.11.0-alpine3.20'
-                }
-            }
             steps {
                 echo 'Ejecutando pruebas'
                 sh 'npm test -- --ci'  // Forzar modo CI en Jest para evitar problemas
