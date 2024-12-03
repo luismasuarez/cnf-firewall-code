@@ -1,9 +1,11 @@
 pipeline {
     agent {
         docker {
-            image 'node:22.11.0-alpine3.20' // Imagen específica para garantizar consistencia
+            image 'node:22.11.0-alpine3.20'
+            args '-v /var/run/docker.sock:/var/run/docker.sock'
         }
     }
+
     options {
         skipStagesAfterUnstable() // Salta etapas posteriores si alguna es inestable
         timestamps() // Agrega timestamps para un mejor debugging
