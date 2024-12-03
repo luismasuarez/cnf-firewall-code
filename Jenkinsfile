@@ -14,7 +14,11 @@ pipeline {
         CI = 'true'
     }
     stages {
-
+        stage('Docker Images') {
+            steps {
+                sh 'docker images'
+            }
+        }
 
         stage('Instalar dependencias') {
             steps {
