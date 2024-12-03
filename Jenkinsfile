@@ -14,11 +14,15 @@ pipeline {
         CI = 'true'
     }
     stages {
-        stage('Ver images de docker') {
+        stage('Ver imágenes de Docker') {
             agent any
-
             steps {
-                sh 'docker images'
+                script {
+                    // Debugging para verificar el entorno
+                    sh 'ls -l /var/run/docker.sock'
+                    sh 'docker info'
+                    sh 'docker images'
+                }
             }
         }
 
