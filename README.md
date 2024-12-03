@@ -118,6 +118,11 @@ Comprueba que el clúster esté funcionando:
 ```bash
 kubectl get nodes
 ```
+#### **Paso 3.3: Error de autenticacion**
+Actualiza el contexto e inicialo para kubectl:
+```bash
+minikube update-context
+```
 
 ---
 
