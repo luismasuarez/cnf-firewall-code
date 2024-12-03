@@ -10,18 +10,6 @@ pipeline {
         CI = 'true'
     }
     stages {
-        stage('Ver images de docker') {
-            agent any
-
-            steps {
-                sh '''
-                docker info
-                docker version
-                docker images
-                '''
-            }
-        }
-
         stage('Instalar dependencias') {
             agent {
                 docker {
