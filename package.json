@@ -4,7 +4,7 @@
   "description": "Aplicación Express con un cortafuegos simulado",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node src/server.js",
     "test": "NODE_ENV=test jest"
   },
   "dependencies": {
