@@ -1,10 +1,9 @@
 const request = require("supertest");
-const app = require("./server"); // Importa tu servidor
+const app = require("./server");
 
 describe("Pruebas de servidor Express", () => {
   beforeAll(() => {
-    // Configura el servidor para confiar en proxies durante las pruebas
-    app.set("trust proxy", true); // Esto hace que Express use 'X-Forwarded-For' para req.ip
+    app.set("trust proxy", true);
   });
 
   it("debería devolver 'Hola, Mundo' en el endpoint /hello", async () => {
