@@ -39,6 +39,15 @@ pipeline {
                 sh 'npm test -- --ci'  // Forzar modo CI en Jest para evitar problemas
             }
         }
+
+        stage('Generar imagen') {
+            agent any
+
+            steps {
+                echo 'Construir Imagen'
+                sh 'docker build -t cnf-firewall:1.0 .'
+            }
+        }
     }
 
     post {
