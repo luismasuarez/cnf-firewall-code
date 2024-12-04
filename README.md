@@ -1,5 +1,3 @@
-Aquí tienes una versión mejorada y más contextualizada del proceso para orquestar la imagen Docker `cnf-firewall:1.1` con Kubernetes en tu entorno local utilizando Minikube. Esta guía detalla cada paso y proporciona información adicional para entender lo que estás haciendo en cada etapa:
-
 ---
 
 ## **Orquestar la imagen Docker `cnf-firewall:1.1` con Kubernetes**
