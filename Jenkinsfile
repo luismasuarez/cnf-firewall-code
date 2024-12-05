@@ -62,16 +62,8 @@ pipeline {
         stage('Disparar Despliegue en Kubernetes') {
             steps {
                 script {
-                    try {
-                        echo 'Disparando job updatemanifest'
-                        build job: 'updatemanifest',
-                parameters: [
-                    string(name: 'DOCKERTAG', value: "${DOCKER_IMAGE_TAG}")
-                    ]
-                    } catch (Exeption e) {
-                        echo "Error al disparar el job updatemanifest: ${e.message}"
-                        error('Fallo al ejecutar el despliegue.')
-                    }
+                    echo 'Disparando job updatemanifest'
+                    build job: 'updatemanifest', parameters: [string(name: 'DOCKERTAG', value: "${DOCKER_IMAGE_TAG}")                    ]
                 }
             }
         }
