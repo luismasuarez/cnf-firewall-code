@@ -7,10 +7,8 @@ pipeline {
     }
 
     environment {
-        NODE_ENV = 'prod'
-        CI = 'true'
         DOCKER_IMAGE_NAME = 'luisma95/cnf-firewall'
-        DOCKER_IMAGE_TAG = '1.0'
+        DOCKER_IMAGE_TAG = "lts-${BUILD_NUMBER}"
     }
 
     stages {
@@ -22,13 +20,7 @@ pipeline {
             }
             steps {
                 echo 'Instalando dependencias del proyecto'
-                sh '''
-                if [ -d node_modules ]; then
-                    echo "Usando cache de dependencias existente"
-                else
-                    npm ci  # Limpia y reinstala dependencias basado en package-lock.json
-                fi
-                '''
+                sh 'npm ci'
             }
         }
 
@@ -62,6 +54,7 @@ pipeline {
                 sh '''
                 echo "${DOCKER_CREDS_PSW}" | docker login -u "${DOCKER_CREDS_USR}" --password-stdin
                 docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                docker rmi ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} || true
                 '''
             }
         }
@@ -69,11 +62,16 @@ pipeline {
         stage('Disparar Despliegue en Kubernetes') {
             steps {
                 script {
-                    echo 'Disparando job de despliegue'
-                    build job: 'updatemanifest',
+                    try {
+                        echo 'Disparando job updatemanifest'
+                        build job: 'updatemanifest',
                 parameters: [
                     string(name: 'DOCKERTAG', value: "${DOCKER_IMAGE_TAG}")
-                ]
+                    ]
+                    } catch (Exeption e) {
+                        echo "Error al disparar el job updatemanifest: ${e.message}"
+                        error('Fallo al ejecutar el despliegue.')
+                    }
                 }
             }
         }
