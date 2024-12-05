@@ -1,4 +1,4 @@
-## **Orquestar la imagen Docker `cnf-firewall:1.1` con Kubernetes**
+## **Orquestar la imagen Docker `cnf-firewall:lts` con Kubernetes**
 
 Este tutorial te enseñará a desplegar una aplicación Dockerizada en Kubernetes utilizando **Minikube**. También puedes adaptarlo para herramientas similares como **Kind** (Kubernetes IN Docker). Aquí, configuraremos un clúster de Kubernetes local, empaquetaremos tu aplicación como una imagen Docker, y la desplegaremos en Kubernetes.
 
@@ -225,40 +225,79 @@ Esto permite a Kubernetes descargar la imagen desde Docker Hub automáticamente.
 
 Con estos pasos, habrás desplegado y orquestado tu aplicación `cnf-firewall:1.1` en Kubernetes usando Minikube. 🎉 ¡Ahora tu aplicación está lista para manejar tráfico y escalar en un clúster Kubernetes!
 
+### Instalacion de ArgoCD
+
+1. Crear un namespace con kuberneters para argocd
+
+```bash
+kubectl create namespace argocd
 ```
-pipeline {
-    agent {
-        docker {
-            image 'docker:24.0.5-dind'
-            args '-v /var/run/docker.sock:/var/run/docker.sock --user root'
-        }
-    }
-    stages {
-        stage('Comprobar archivos clonados') {
-            steps {
-                sh 'ls'
-            }
-        }
 
-        stage('Comprobar versión de Docker') {
-            steps {
-                sh 'docker version'
-            }
-        }
-    }
+2. Aplicar el manifiesto de despliegue para argocd en el namespace creado
 
-    post {
-        always {
-            // Pasos de limpieza, si es necesario
-            echo 'Pipeline finalizada.'
-        }
-        success {
-            echo 'Las pruebas fueron exitosas.'
-        }
-        failure {
-            echo 'Las pruebas fallaron.'
-        }
-    }
-}
+```bash 
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
 
+3. Descargar el instalador de ArgoCD
+
+```bash
+curl -sSL -o argocd-linux-amd64 https://github.com/argoproj/argo-cd/releases/latest/download/argocd-linux-amd64
+```
+
+4. Instalar ArgoCD
+
+```bash
+sudo install -m 555 argocd-linux-amd64 /usr/local/bin/argocd
+```
+
+5. Acceder a Argo CD API Server en este caso mediante Port Forwarding
+
+```bash
+kubectl port-forward svc/argocd-server -n argocd 9000:443
+```
+
+Acceder a la interfaz visual en: https://localhost:9000/, esto dara aviso de sitio no seguno, se le da continuar al sitio para acceder.
+
+5. Al abrir la pagina web poner las credenciales: 
+
+- Usuario por defecto es `admin`
+- La contraseña se obtiene con el comando:
+```bash
+kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+```
+al ejecutar el comando se vera de esta manera
+```bash
+luisma@DESKTOP-6C81CKL ~> kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+dhZ4CmOlDSVC0VzC
+```
+Esta contraseña se puede cambiar una ves iniciada la sesion en la web local
+
+6. Para configurar una nueva app mediante un repositorio privado deben agregarse las credenciales
+
+- Hacer login mediante la consola, con el usuario `admin` y la contraseña que se tenga en cada caso
+- 
+```bash
+argocd login localhost:9000
+```
+
+- Agregar el repositorio y sus credenciales por consola
+- 
+```bash
+argocd repo add http://gitea.net/gitea/updatemanifest.git --username gitea --password password
+```
+
+se obtendra algo asi 
+```bash
+luisma@DESKTOP-6C81CKL ~> argocd repo add http://gitea.net/gitea/updatemanifest.git --username gitea --password password
+Repository 'http://gitea.net/gitea/updatemanifest.git' added
+```
+
+7. Comprobar el repositorio agregado
+
+```bash
+luisma@DESKTOP-6C81CKL ~> argocd repo list
+TYPE  NAME  REPO                                       INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
+git         http://gitea.net/gitea/updatemanifest.git  false     false  false  true   Successful
 ```
