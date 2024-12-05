@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 
 // Endpoint principal
 app.get("/hello", (req, res) => {
-  res.send("Hola, Mundo");
+  res.send("Hola, Mundo powered by ArgoCD");
 });
 
 // Endpoint de métricas básicas
