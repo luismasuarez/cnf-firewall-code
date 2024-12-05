@@ -8,7 +8,7 @@ pipeline {
 
     environment {
         DOCKER_IMAGE_NAME = 'luisma95/cnf-firewall'
-        DOCKER_IMAGE_TAG = "lts-${BUILD_NUMBER}"
+        DOCKER_IMAGE_TAG = "lts-${BUILD_NUMBER}" // BUILD_NUMBER es el numero de ejecuciondel job de jenkins
     }
 
     stages {
@@ -46,6 +46,7 @@ pipeline {
 
         stage('Publicar imagen en Docker Hub') {
             agent any
+            // Se deben definir en las credenciales globales de jenkins cada credencial para el servicio que haga falta
             environment {
                 DOCKER_CREDS = credentials('dockerhub-credentials')
             }
@@ -60,6 +61,8 @@ pipeline {
         }
 
         stage('Disparar Despliegue en Kubernetes') {
+            // Se pasa el parametro DOCKERTAG al job updatemanifest
+            // para actualizar el manifiesto de despliegue de kuberneters
             steps {
                 script {
                     echo 'Disparando job updatemanifest'
