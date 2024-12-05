@@ -23,7 +23,7 @@ describe("Pruebas de servidor Express", () => {
   it("debería permitir solicitudes de IPs no bloqueadas", async () => {
     const res = await request(app).get("/hello");
     expect(res.status).toBe(200);
-    expect(res.text).toBe("Hola, Mundo");
+    expect(res.text).toBe("Hola, Mundo desde ArgoCD");
   });
 
   it("debería devolver métricas correctamente", async () => {
