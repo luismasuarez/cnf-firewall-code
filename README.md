@@ -301,3 +301,9 @@ luisma@DESKTOP-6C81CKL ~> argocd repo list
 TYPE  NAME  REPO                                       INSECURE  OCI    LFS    CREDS  STATUS      MESSAGE  PROJECT
 git         http://gitea.net/gitea/updatemanifest.git  false     false  false  true   Successful
 ```
+
+8. Acceder al servicio orquestado por ArgoCD
+
+```bash
+kubectl port-forward svc/cnf-firewall-service 5000:80
+```

@@ -6,10 +6,10 @@ describe("Pruebas de servidor Express", () => {
     app.set("trust proxy", true);
   });
 
-  it("debería devolver 'Hola, Mundo' en el endpoint /hello", async () => {
+  it("debería devolver 'Hola, Mundo desde ArgoCD' en el endpoint /hello", async () => {
     const res = await request(app).get("/hello");
     expect(res.status).toBe(200);
-    expect(res.text).toBe("Hola, Mundo");
+    expect(res.text).toBe("Hola, Mundo desde ArgoCD");
   });
 
   it("debería bloquear la IP en la lista negra (deniedIPs)", async () => {
