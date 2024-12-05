@@ -40,7 +40,7 @@ pipeline {
             }
             steps {
                 echo 'Ejecutando pruebas'
-                sh 'npm test -- --ci'  // Forzar modo CI en Jest para evitar problemas
+                sh 'npm test -- --ci'
             }
         }
 
@@ -55,7 +55,7 @@ pipeline {
         stage('Publicar imagen en Docker Hub') {
             agent any
             environment {
-                DOCKER_CREDS = credentials('dockerhub-credentials') // Secret de Docker Hub
+                DOCKER_CREDS = credentials('dockerhub-credentials')
             }
             steps {
                 echo 'Publicando la imagen en Docker Hub'
@@ -63,6 +63,18 @@ pipeline {
                 echo "${DOCKER_CREDS_PSW}" | docker login -u "${DOCKER_CREDS_USR}" --password-stdin
                 docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
                 '''
+            }
+        }
+
+        stage('Disparar Despliegue en Kubernetes') {
+            steps {
+                script {
+                    echo 'Disparando job de despliegue'
+                    build job: 'updatemanifest',
+                parameters: [
+                    string(name: 'DOCKERTAG', value: "${DOCKER_IMAGE_TAG}")
+                ]
+                }
             }
         }
     }
