@@ -82,12 +82,12 @@ Para usar Kubernetes, la imagen debe estar disponible en un registro como Docker
 
 2. Etiqueta la imagen:
    ```bash
-   docker tag cnf-firewall:1.1 <usuario_docker>/cnf-firewall:1.1
+   docker tag cnf-firewall:1.1 <nombre_repositorio_docker_hub>/cnf-firewall:tagname
    ```
 
 3. Sube la imagen:
    ```bash
-   docker push <usuario_docker>/cnf-firewall:1.1
+   docker push <nombre_repositorio_docker_hub>/cnf-firewall:tagname
    ```
 
 ---

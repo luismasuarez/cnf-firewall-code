@@ -5,9 +5,12 @@ pipeline {
         skipStagesAfterUnstable()
         timestamps()
     }
+
     environment {
         NODE_ENV = 'prod'
         CI = 'true'
+        DOCKER_IMAGE_NAME = 'luisma95/cnf-firewall'
+        DOCKER_IMAGE_TAG = '1.0'
     }
 
     stages {
@@ -41,22 +44,35 @@ pipeline {
             }
         }
 
-        stage('Generar imagen') {
+        stage('Construir imagen Docker') {
             agent any
-
             steps {
-                echo 'Construir Imagen'
-                sh 'docker build -t cnf-firewall:lts .'
+                echo 'Construyendo la imagen de Docker'
+                sh "docker build -t ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG} ."
+            }
+        }
+
+        stage('Publicar imagen en Docker Hub') {
+            agent any
+            environment {
+                DOCKER_CREDS = credentials('dockerhub-credentials') // Secret de Docker Hub
+            }
+            steps {
+                echo 'Publicando la imagen en Docker Hub'
+                sh '''
+                echo "${DOCKER_CREDS_PSW}" | docker login -u "${DOCKER_CREDS_USR}" --password-stdin
+                docker push ${DOCKER_IMAGE_NAME}:${DOCKER_IMAGE_TAG}
+                '''
             }
         }
     }
 
     post {
         success {
-            echo 'Las pruebas fueron exitosas.'
+            echo 'Pipeline ejecutado exitosamente y la imagen fue publicada.'
         }
         failure {
-            echo 'Las pruebas fallaron.'
+            echo 'Pipeline falló en alguna etapa.'
             script {
                 currentBuild.result = 'FAILURE'
             }
