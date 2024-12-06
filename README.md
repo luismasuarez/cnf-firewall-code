@@ -4,7 +4,7 @@ Este tutorial te enseñará a desplegar una aplicación Dockerizada en Kubernete
 
 ---
 
-### **1. Empaquetar tu aplicación Express en Docker**
+## **1. Empaquetar tu aplicación Express en Docker**
 
 Si tu aplicación usa Express (por ejemplo, `server.js`), necesitas un archivo `Dockerfile` y un `package.json` para construir la imagen.
 
@@ -70,7 +70,7 @@ Con los archivos listos, construye tu imagen Docker:
 
 ---
 
-### **2. Subir la imagen a un registro de Docker**
+## **2. Subir la imagen a un registro de Docker**
 Para usar Kubernetes, la imagen debe estar disponible en un registro como Docker Hub.
 
 1. Inicia sesión en Docker Hub:
@@ -90,7 +90,7 @@ Para usar Kubernetes, la imagen debe estar disponible en un registro como Docker
 
 ---
 
-### **3. Configurar Minikube**
+## **3. Configurar Minikube**
 
 #### **Paso 3.1: Instalar Minikube**
 Sigue las instrucciones de la [documentación oficial](https://minikube.sigs.k8s.io/docs/):
@@ -127,7 +127,7 @@ Error de servicio
 
 ---
 
-### **4. Crear un despliegue Kubernetes**
+## **4. Crear un despliegue Kubernetes**
 
 #### **Paso 4.1: Archivo de despliegue `deployment.yaml`**
 Crea un archivo `deployment.yaml` para describir cómo Kubernetes ejecutará tu aplicación.
@@ -197,7 +197,7 @@ Crea un archivo `service.yaml` para exponer tu aplicación a través de un servi
 
 ---
 
-### **5. Probar la aplicación en Minikube**
+## **5. Probar la aplicación en Minikube**
 
 #### **Paso 5.1: Acceder al servicio**
 Usa el comando de Minikube para abrir el servicio en tu navegador:
@@ -214,7 +214,7 @@ kubectl get services
 
 ---
 
-### **6. Integrar con Docker Hub (opcional)**
+## **6. Integrar con Docker Hub (opcional)**
 Asegúrate de usar la ruta completa de la imagen en tus archivos YAML, por ejemplo:
 ```yaml
 image: <usuario_docker>/cnf-firewall:1.1
@@ -225,7 +225,7 @@ Esto permite a Kubernetes descargar la imagen desde Docker Hub automáticamente.
 
 Con estos pasos, habrás desplegado y orquestado tu aplicación `cnf-firewall:1.1` en Kubernetes usando Minikube. 🎉 ¡Ahora tu aplicación está lista para manejar tráfico y escalar en un clúster Kubernetes!
 
-### Instalacion de ArgoCD
+## Instalacion de ArgoCD
 
 1. Crear un namespace con kuberneters para argocd
 
@@ -306,4 +306,23 @@ git         http://gitea.net/gitea/updatemanifest.git  false     false  false  t
 
 ```bash
 kubectl port-forward svc/cnf-firewall-service 5000:80
+```
+
+### Consumo de metricas
+
+1. Ejecutar metrics-server de minikube
+```bash
+minikube addons enable metrics-server
+```
+
+2. Comprobar que esta funcionando
+```bash
+kubectl get apiservice v1beta1.metrics.k8s.io
+```
+
+debe mostrar lo siguiente
+```bash
+luisma@DESKTOP-6C81CKL ~> kubectl get apiservice v1beta1.metrics.k8s.io
+NAME                     SERVICE                      AVAILABLE   AGE
+v1beta1.metrics.k8s.io   kube-system/metrics-server   True        4h24m
 ```
