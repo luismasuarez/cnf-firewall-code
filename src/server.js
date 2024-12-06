@@ -1,52 +1,26 @@
 // server.js
 const express = require("express");
 const app = express();
+const firewall = require("./middlewares/firewall");
+const metrics = require("./middlewares/metrics");
+const deniedIPs = require('./data/deniedIPs')
 
 const PORT = process.env.PORT || 5000;
 
-// Lista de IPs bloqueadas (simula reglas de cortafuegos)
-const deniedIPs = ["172.20.0.1"];
-console.log(`[INFO] Lista de IPs bloqueadas: ${deniedIPs.join(", ")}`);
+const firewallConfig = {
+  deniedIPs: deniedIPs,
+};
 
-// Middleware para simular el cortafuegos
-app.use((req, res, next) => {
-  const clientIP = req.ip.replace(/^::ffff:/, ""); // IP del cliente
-  console.log(
-    `[INFO] Solicitud desde IP: ${clientIP}, Ruta: ${req.originalUrl}`
-  );
+// Middlewares
+app.use(firewall(firewallConfig));
+app.use(metrics.collect);
 
-  if (deniedIPs.includes(clientIP)) {
-    console.log(`[DENIED] Bloqueando solicitud de IP: ${clientIP}`);
-    blockedRequests++; // Incrementa el contador de solicitudes bloqueadas aquí
-    return res.status(403).send("Acceso denegado");
-  }
-
-  next();
-});
-
-// Endpoint principal
+// Endpoints
 app.get("/hello", (req, res) => {
-  res.send("Hola, Mundo desde ArgoCD");
+  res.send("Hola, Mundo");
 });
 
-// Endpoint de métricas básicas
-let allowedRequests = 0;
-let blockedRequests = 0;
-
-app.use((req, res, next) => {
-  if (res.statusCode !== 403) {
-    allowedRequests++; // Si no fue bloqueada, aumenta el contador de solicitudes permitidas
-  }
-  next();
-});
-
-app.get("/metrics", (req, res) => {
-  res.json({
-    allowedRequests,
-    blockedRequests,
-    deniedIPs,
-  });
-});
+app.get("/metrics", metrics.report);
 
 // Inicia el servidor solo si no está en pruebas
 if (process.env.NODE_ENV !== "test") {
@@ -55,5 +29,5 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
-// Exporta la app para realizar pruebas con supertest
+// Exporta la app para realizar pruebas
 module.exports = app;
