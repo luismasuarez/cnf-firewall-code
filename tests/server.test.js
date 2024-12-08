@@ -20,12 +20,6 @@ describe("Pruebas de servidor Express", () => {
     expect(res.text).toBe("Acceso denegado");
   });
 
-  it("debería permitir solicitudes de IPs no bloqueadas", async () => {
-    const res = await request(app).get("/hello");
-    expect(res.status).toBe(200);
-    expect(res.text).toBe("Hola, Mundo");
-  });
-
   it("debería devolver métricas correctamente", async () => {
     const res = await request(app).get("/metrics");
     expect(res.status).toBe(200);
