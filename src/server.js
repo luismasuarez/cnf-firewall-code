@@ -4,7 +4,7 @@ const app = express();
 const firewall = require("./middlewares/firewall");
 const metrics = require("./middlewares/metrics");
 const deniedIPs = require('./data/deniedIPs')
-
+console.log("Hola desde el server.js)
 const PORT = process.env.PORT || 5000;
 
 const firewallConfig = {
