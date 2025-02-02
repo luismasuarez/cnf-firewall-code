@@ -1,6 +1,6 @@
 ## **Orquestar la imagen Docker `cnf-firewall:lts` con Kubernetes**
 
-Este tutorial te enseñará a desplegar una aplicación Dockerizada en Kubernetes utilizando **Minikube**. También puedes adaptarlo para herramientas similares como **Kind** (Kubernetes IN Docker). Aquí, configuraremos un clúster de Kubernetes local, empaquetaremos tu aplicación como una imagen Docker, y la desplegaremos en Kubernetes.
+Este tutorial te enseñará a desplegar una aplicación Dockerizada en Kubernetes utilizando **Minikube**. También puedes adaptarlo para herramientas similares como **Kind** (Kubernetes IN Docker). Aquí, configuraremos un clúster de Kubernetes local, empaquetaremos tu aplicación como una imagen Docker, y la desplegaremos en Kubernetes...
 
 ---
 
