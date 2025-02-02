@@ -7,7 +7,7 @@ pipeline {
     }
 
     environment {
-        DOCKER_IMAGE_NAME = 'luisma95/cnf-firewall'
+        DOCKER_IMAGE_NAME = 'luismasuarezzz/cnf-firewall'
         DOCKER_IMAGE_TAG = "lts-${BUILD_NUMBER}" // BUILD_NUMBER es el numero de ejecuciondel job de jenkins
     }
 
